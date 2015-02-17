@@ -1,0 +1,46 @@
+// Article picker
+
+.mgz-article-picker-list {
+    height: 300px;
+    background: #f2f2f2;
+    border: 1px solid #bbb;
+    overflow: auto;
+}
+
+.mgz-article-picker-list label {
+    position: relative;
+    display: block;
+    padding: 4px;
+    margin: 0;
+    height: 36px;
+}
+
+.mgz-article-picker-list label:nth-of-type(even) {
+    background: #fafafa;
+}
+
+.mgz-article-picker-list label input[type=checkbox] {
+    position: absolute;
+    left: 12px;
+    top: 6px;
+}
+
+.mgz-article-picker-list label .mgz-article-title {
+    display: block;
+    padding-left: 35px;
+    font-size: 1.1em;
+    font-weight: bold;
+    padding-top: 4px;
+}
+
+// Name the issue
+
+ul.mgz-selected-articles {
+    list-style: disc;
+}
+
+ul.mgz-selected-articles li {
+    display: list-item;
+    margin-left: 1.5em;
+    margin-bottom: 1px;
+}

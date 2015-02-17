@@ -1,0 +1,17 @@
+<h1>Pick articles</h1>
+
+<p>Select articles to include in your new issue</p>
+
+<div class="mgz-article-picker-list">
+  <% for article in @articles: %>
+  <label>
+    <input type="checkbox" data-id="<%= article.ID %>" <%= "checked" if @selected.indexOf(article.ID) >= 0 %>>
+    <span class="mgz-article-title"><%= article.title %></span>
+  </label>
+  <% end %>
+</div>
+
+<div class="mgz-buttons">
+  <button class="btn btn-default btn-lg mgz-modal-cancel">Cancel</button>
+  <button class="btn btn-primary btn-lg pull-right mgz-modal-next">Next »</button>
+</div>
