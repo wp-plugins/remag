@@ -1,0 +1,24 @@
+#!/usr/bin/env ruby
+require_relative 'building'
+require 'listen'
+
+system "script/build"
+
+def listen pattern
+  listener = Listen.to('.', only: pattern) do
+    yield
+  end
+  listener.start
+  sleep
+end
+
+spawn "sass --watch src/sass/admin.scss:admin/assets/css/admin.css"
+
+fork do
+  listen /\.(coffe|eco)/ do
+    build_sources
+    puts "Recompiled sources"
+  end
+end
+
+Process.waitall

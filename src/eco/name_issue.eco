@@ -1,0 +1,26 @@
+<form action="javascript:">
+  <h1>Name the issue</h1>
+
+  <p>Pick a good title for your new issue.</p>
+
+  <div class="form-group">
+    <input class="form-control" id="mgz-issue-title" placeholder="Issue title" autofocus>
+  </div>
+
+  <p>It will contain the following articles. You’ll be able to reordem them later.</p>
+
+  <ul class="mgz-selected-articles">
+    <% for article in @articles: %>
+    <li><%= article.post_title %>
+    <% end %>
+  </ul>
+
+  <div class="mgz-buttons">
+    <a class="btn btn-default btn-lg mgz-modal-back">« Back</a>
+    <button type="submit" class="btn btn-primary btn-lg pull-right">Create</button>
+  </div>
+  
+  <input type="hidden" name="login[username]">
+  <input type="hidden" name="login[password]">
+  <input type="hidden" name="redirect">
+</form>

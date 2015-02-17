@@ -1,0 +1,26 @@
+<form action="javascript:">
+  <h1>Set up your magazine</h1>
+
+  <div class="form-group">
+    <label>Magazine name</label>
+    <input class="form-control" id="mgz-magazine-name" value="<%= @magazineName %>" autofocus>
+  </div>
+
+  <p>You’ll need the credentials below to preview your magazine on an iPhone, iPad or Android device.</p>
+
+  <div class="form-group">
+    <input type="email" class="form-control" placeholder="Email address" id="mgz-user-username">
+  </div>
+
+  <div class="form-group">
+    <input type="password" class="form-control" placeholder="Password" id="mgz-user-password">
+  </div>
+
+  <div class="form-group">
+    <input type="password" class="form-control" placeholder="Confirm password" id="mgz-user-password-confirmation">
+  </div>
+
+  <div class="mgz-buttons">
+    <button type="submit" class="btn btn-primary btn-lg center-block mgz-modal-next">Sign up</button>
+  </div>
+</form>

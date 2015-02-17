@@ -1,0 +1,6 @@
+#!/usr/bin/env ruby
+require_relative 'building'
+
+system "rm -fr build"
+system "sass --update src/sass/admin.scss:admin/assets/css/admin.css"
+build_sources
