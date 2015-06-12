@@ -44,5 +44,9 @@ With Remag you can shape the future of digital mobile publishing.
 
 == Changelog ==
 
+= 1.0.1 =
+* Show draft, private and future posts
+* Import WordPress article metadata into Remag
+
 = 1.0 =
 * First version!
