@@ -64,7 +64,12 @@ jQuery ($) =>
 					password: mgz_settings.user.password
 					issue: JSON.stringify
 						title: @title
-						articles: @articleData.map (a) -> { title: a.post_title, content: a.post_content }
+						articles: @articleData.map (a) ->
+							id: a.ID,
+							title: a.post_title,
+							content: a.post_content,
+							metadata: a.meta,
+							url: a.permalink
 			
 			if result.status == 200
 				return result.responseJSON.issue_id

@@ -52,9 +52,14 @@ add_action( 'plugins_loaded', array( 'Remag', 'get_instance' ) );
  *
  * The code below is intended to to give the lightest footprint possible.
  */
-if ( is_admin() && ( ! defined( 'DOING_AJAX' ) || ! DOING_AJAX ) ) {
+if ( ! defined( 'DOING_AJAX' ) || ! DOING_AJAX ) {
 
-	require_once( plugin_dir_path( __FILE__ ) . 'admin/class-remag-admin.php' );
-	add_action( 'plugins_loaded', array( 'Remag_Admin', 'get_instance' ) );
+    if (is_admin()) {
+    	require_once( plugin_dir_path( __FILE__ ) . 'admin/class-remag-admin.php' );
+    	add_action( 'plugins_loaded', array( 'Remag_Admin', 'get_instance' ) );
+    }
+    else {
+        Remag::before_blog_loaded();
+    }
 
 }

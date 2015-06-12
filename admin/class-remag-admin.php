@@ -17,26 +17,45 @@ class Remag_Admin {
 		if ($_GET['page'] == 'remag') {
 
 			if ($_GET['mode'] == 'settings') {
-				if ($_POST['data']) {
-					update_option('remag_settings', json_decode($_POST['data'], true));
+				if (isset($_POST['data'])) {
+					update_option('remag_settings', array_merge(
+						(array)get_option('remag_settings'),
+						(array)json_decode($_POST['data'], true)
+					));
 				}
 				$this->return_json(get_option('remag_settings'));
 			} else {
+
+				$query = array(
+				    'posts_per_page' => 20,
+				    'offset'         => 0,
+				    'post_status'	 => array('draft', 'future', 'private', 'publish')
+				);
+
 				if (is_array($_POST['ids']) && !empty($_POST['ids'])) {
-					$this->return_json(get_posts(array(
-					    'posts_per_page' => -1, // no limit
+					$query['posts_per_page'] = -1; // no limit
+					$posts = get_posts(array_merge($query, array(
 					    'include'        => implode(', ', $_POST['ids'])
 					)));
+					foreach ($posts as $key => $post) {
+						$posts[$key]->meta = get_post_custom($post->ID);
+						$posts[$key]->permalink = get_permalink($post->ID);
+					}
+					$this->return_json($posts);
 				}
 				else if ($_GET['json']) {
-					$posts = get_posts(array(
-					    'posts_per_page' => -1 // no limit
-					));
 
 					$res = array();
-					foreach ($posts as $post) {
-						$res[] = array('ID' => $post->ID, 'title' => $post->post_title);
+					$i = 0;
+
+					while ($posts = get_posts($query)) {
+						foreach ($posts as $post) {
+							$res[] = array('ID' => $post->ID, 'title' => $post->post_title, 'status' => $post->post_status);
+						}
+						$i++;
+						$query['offset'] = $i*$query['posts_per_page'];
 					}
+
 					$this->return_json(array('blog_title' => get_bloginfo('name'), 'posts' => $res));
 				}
 			}

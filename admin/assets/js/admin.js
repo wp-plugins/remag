@@ -88,8 +88,11 @@
                 title: this.title,
                 articles: this.articleData.map(function(a) {
                   return {
+                    id: a.ID,
                     title: a.post_title,
-                    content: a.post_content
+                    content: a.post_content,
+                    metadata: a.meta,
+                    url: a.permalink
                   };
                 })
               })
@@ -221,13 +224,17 @@
       return _this.MgzSettings = (function() {
         MgzSettings.prototype.magazine = {
           name: null,
-          identifier: null
+          identifier: null,
+          app_store_id: null,
+          google_play_id: null
         };
 
         MgzSettings.prototype.user = {
           username: null,
           password: null
         };
+
+        MgzSettings.prototype.smartbanner = null;
 
         function MgzSettings() {
           var json, result;
@@ -236,7 +243,7 @@
             async: false
           });
           if (json = result.responseJSON) {
-            this.magazine = json.magazine, this.user = json.user;
+            this.magazine = json.magazine, this.user = json.user, this.smartbanner = json.smartbanner;
           }
         }
 
@@ -251,7 +258,8 @@
             data: {
               data: JSON.stringify({
                 magazine: this.magazine,
-                user: this.user
+                user: this.user,
+                smartbanner: this.smartbanner
               })
             }
           });
@@ -575,7 +583,13 @@
           }
           __out.push('>\n    <span class="mgz-article-title">');
           __out.push(__sanitize(article.title));
-          __out.push('</span>\n  </label>\n  ');
+          __out.push('</span>\n    \n    ');
+          if (article.status !== "publish") {
+            __out.push('\n      <span class="mgz-article-status"> — ');
+            __out.push(__sanitize(article.status));
+            __out.push('</span>\n    ');
+          }
+          __out.push('\n  </label>\n  ');
         }
       
         __out.push('\n</div>\n\n<div class="mgz-buttons">\n  <button class="btn btn-default btn-lg mgz-modal-cancel">Cancel</button>\n  <button class="btn btn-primary btn-lg pull-right mgz-modal-next">Next »</button>\n</div>');
@@ -686,6 +700,34 @@
           });
         };
 
+        MgzAdminPage.prototype.updateSettings = function() {
+          if (!mgz_settings.user.username || !mgz_settings.user.password) {
+            return;
+          }
+          console.log('Fetching magazine info');
+          return $.ajax({
+            url: mgz_api_url + '/magazines/' + mgz_settings.magazine.identifier + '.json',
+            dataType: 'json',
+            data: {
+              username: mgz_settings.user.username,
+              password: mgz_settings.user.password
+            }
+          }).done((function(_this) {
+            return function(data) {
+              var smartbannerReady;
+              mgz_settings.magazine.name = data.name;
+              mgz_settings.magazine.app_store_id = data.app_store_id;
+              mgz_settings.magazine.google_play_id = data.google_play_id;
+              smartbannerReady = data.app_status === 'published' && data.app_store_id && data.google_play_id;
+              return mgz_settings.save();
+            };
+          })(this)).fail((function(_this) {
+            return function(_, status) {
+              return console.log(status);
+            };
+          })(this));
+        };
+
         return MgzAdminPage;
 
       })();
@@ -700,7 +742,8 @@
       window.mgz_assets_url = location.href.match(/^(.*)wp-admin/)[1] + 'wp-content/plugins/remag/admin/assets';
       window.mgz_adminPage = new MgzAdminPage;
       window.mgz_settings = new MgzSettings;
-      return mgz_adminPage.render();
+      mgz_adminPage.render();
+      return mgz_adminPage.updateSettings();
     };
   })(this));
 

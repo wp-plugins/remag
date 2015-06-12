@@ -19,6 +19,40 @@ jQuery ($) =>
 				el.find("input[name='login[password]']").val(mgz_settings.user.password)
 				el.find("input[name=redirect]").val("magazines/" + mgz_settings.magazine.id)
 				return yes
+			
+		updateSettings: ->
+			if !mgz_settings.user.username || !mgz_settings.user.password
+				return
+			
+			console.log 'Fetching magazine info'
+			
+			$.ajax
+				url: mgz_api_url + '/magazines/' + mgz_settings.magazine.identifier + '.json'
+				dataType: 'json'
+				data:
+					username: mgz_settings.user.username
+					password: mgz_settings.user.password
+			.done (data) =>
+				# console.log 'Old settings:'
+				# console.log mgz_settings
+				# console.log 'New data:'
+				# console.log data
+				mgz_settings.magazine.name = data.name
+				mgz_settings.magazine.app_store_id = data.app_store_id
+				mgz_settings.magazine.google_play_id = data.google_play_id
+				
+				smartbannerReady = data.app_status == 'published' && data.app_store_id && data.google_play_id
+				
+				# if smartbannerReady && mgz_settings.smartbanner == null
+				# 	console.log 'Enabling smartbanner'
+				# 	mgz_settings.smartbanner = true
+				
+				mgz_settings.save()
+				# console.log 'New settings:'
+				# console.log mgz_settings
+					
+			.fail (_, status) =>
+				console.log status
 	
 	debug = no
 	if debug
@@ -32,3 +66,4 @@ jQuery ($) =>
 	window.mgz_adminPage  = new MgzAdminPage
 	window.mgz_settings   = new MgzSettings
 	mgz_adminPage.render()
+	mgz_adminPage.updateSettings()
