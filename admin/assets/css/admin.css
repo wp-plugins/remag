@@ -5996,12 +5996,15 @@ input:focus {
   left: 12px;
   top: 6px; }
 
-.mgz-article-picker-list label .mgz-article-title {
-  display: block;
+.mgz-article-picker-list .mgz-article-title {
+  display: inline-block;
   padding-left: 35px;
   font-size: 1.1em;
   font-weight: bold;
   padding-top: 4px; }
+
+.mgz-article-picker-list .mgz-article-status {
+  font-weight: normal; }
 
 ul.mgz-selected-articles {
   list-style: disc; }

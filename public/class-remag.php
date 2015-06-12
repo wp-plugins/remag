@@ -18,11 +18,11 @@ class Remag {
 		// Activate plugin when new blog is added
 		add_action( 'wpmu_new_blog', array( $this, 'activate_new_site' ) );
 	}
-	
+
 	public function get_plugin_slug() {
 		return $this->plugin_slug;
 	}
-	
+
 	public static function get_instance() {
 		if ( null == self::$instance ) {
 			self::$instance = new self;
@@ -47,12 +47,12 @@ class Remag {
 			} else {
 				self::single_activate();
 			}
-			
+
 		} else {
 			self::single_activate();
 		}
 	}
-	
+
 	public static function deactivate( $network_wide ) {
 		if ( function_exists( 'is_multisite' ) && is_multisite() ) {
 
@@ -87,6 +87,16 @@ class Remag {
 		restore_current_blog();
 	}
 
+	public static function before_blog_loaded() {
+		$hook = new RemagHook();
+
+		$settings = (array)get_option('remag_settings');
+
+		if (isset($settings['smartbanner']) && $settings['smartbanner'] === true) {
+			add_action('wp_head', array($hook, 'smartbanner'));
+		}
+	}
+
 	private static function get_blog_ids() {
 		global $wpdb;
 
@@ -114,4 +124,21 @@ class Remag {
 	//
 	// }
 
+}
+
+class RemagHook {
+
+	public function smartbanner() {
+		return;
+		$settings = (array)get_option('remag_settings');
+		$app_store_id = '';
+		$identifier = '';
+		
+		if (isset($settings['magazine'])) {
+			$app_store_id = $settings['magazine']['app_store_id'];
+			$identifier = $settings['magazine']['identifier'];
+		}
+		echo '<meta name="apple-itunes-app" content="app-id=' . $app_store_id . '">' . "\n";
+		echo '<script src="https://api.remag.me/magazines/' . $identifier . '/smartbanner.js"></script>' . "\n";
+	}
 }

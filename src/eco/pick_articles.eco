@@ -7,6 +7,10 @@
   <label>
     <input type="checkbox" data-id="<%= article.ID %>" <%= "checked" if @selected.indexOf(article.ID) >= 0 %>>
     <span class="mgz-article-title"><%= article.title %></span>
+    
+    <% if article.status != "publish": %>
+      <span class="mgz-article-status"> — <%= article.status %></span>
+    <% end %>
   </label>
   <% end %>
 </div>
