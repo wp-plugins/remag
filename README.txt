@@ -3,7 +3,7 @@ Contributors: radex
 Tags: Remag, magazine, content, create, marketing, blog, reading, publication, publishing, self publishing, iphone, ipad, ios, android
 Requires at least: 3.8
 Tested up to: 4.1
-Stable tag: 1.0.0
+Stable tag: 1.0.1
 License: GPLv2 or later
 
 Take your blog to a whole new level by converting it to a magazine app for Android, iPad and the iPhone.
